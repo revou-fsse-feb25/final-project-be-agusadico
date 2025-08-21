@@ -1,0 +1,150 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id                Int               @id @default(autoincrement())
+  name              String
+  category          String
+  price             Float
+  originalPrice     Float?
+  discount          String?
+  image             String
+  description       String?
+  features          String[]          @default([])
+  sku               String?
+  rating            Float?            @default(0)
+  reviewCount       Int?              @default(0)
+  inStock           Boolean           @default(true)
+  slug              String?           @unique
+  categories        String[]          @default([])
+  galleryImages     String[]          @default([])
+  tags              String[]          @default([])
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  orderItems        OrderItem[]
+  relatedProducts   ProductRelation[] @relation("RelatedTo")
+  relatedToProducts ProductRelation[] @relation("RelatedFrom")
+}
+
+model ProductRelation {
+  id               Int     @id @default(autoincrement())
+  productId        Int
+  relatedProductId Int
+  tag              String
+  product          Product @relation("RelatedTo", fields: [productId], references: [id])
+  relatedProduct   Product @relation("RelatedFrom", fields: [relatedProductId], references: [id])
+
+  @@unique([productId, relatedProductId])
+}
+
+model Customer {
+  id         Int        @id @default(autoincrement())
+  customerId String     @unique
+  name       String
+  email      String     @unique
+  password   String?
+  username   String?    @unique
+  phone      String?
+  address    String?
+  city       String?
+  birthday   DateTime?
+  image      String?
+  joinDate   DateTime   @default(now())
+  location   String?
+  totalSpent Float      @default(0)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  role       UserRole   @default(USER)
+  lastOrder  LastOrder?
+  orders     Order[]
+}
+
+model LastOrder {
+  id         Int      @id @default(autoincrement())
+  amount     Float
+  date       DateTime
+  customerId Int      @unique
+  customer   Customer @relation(fields: [customerId], references: [id])
+}
+
+model Order {
+  id           Int         @id @default(autoincrement())
+  orderId      String      @unique
+  date         DateTime    @default(now())
+  createdAt    DateTime    @default(now())
+  bookedAtIso  DateTime?
+  customerName String
+  typeOrder    OrderType
+  amount       Float
+  status       OrderStatus
+  note         String?
+  customerId   Int?
+  billing      Billing?
+  customer     Customer?   @relation(fields: [customerId], references: [id])
+  items        OrderItem[]
+  shipping     Shipping?
+}
+
+model OrderItem {
+  id        Int      @id @default(autoincrement())
+  name      String
+  image     String
+  quantity  Int
+  price     Float
+  category  String?
+  orderId   Int
+  productId Int?
+  order     Order    @relation(fields: [orderId], references: [id])
+  product   Product? @relation(fields: [productId], references: [id])
+}
+
+model Billing {
+  id         Int    @id @default(autoincrement())
+  name       String
+  address    String
+  postalCode String
+  orderId    Int    @unique
+  order      Order  @relation(fields: [orderId], references: [id])
+}
+
+model Shipping {
+  id         Int    @id @default(autoincrement())
+  name       String
+  address    String
+  postalCode String
+  orderId    Int    @unique
+  order      Order  @relation(fields: [orderId], references: [id])
+}
+
+model ContactSubmission {
+  id          Int      @id @default(autoincrement())
+  name        String
+  phone       String
+  email       String
+  topic       String
+  location    String
+  message     String
+  submittedAt DateTime @default(now())
+}
+
+enum OrderType {
+  DINE_IN
+  TAKE_AWAY
+}
+
+enum OrderStatus {
+  PENDING
+  DELIVERED
+  CANCELED
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
