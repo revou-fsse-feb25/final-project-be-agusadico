@@ -1,5 +1,3 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/-xOhkWFR)
-
 # Restaurant Management Backend API
 
 ## Overview
@@ -70,6 +68,10 @@ This is a comprehensive NestJS backend application for restaurant management, fe
 - **Products**: Public read access, admin-only write access
 - **Admin**: Full access to all resources
 
+## User Interface
+*ERD Documentation*
+![UI Documentation](docs/ramen-president.png)
+
 ## License
 
 This project is licensed under the [UNLICENSED](LICENSE) license.
@@ -117,5 +119,11 @@ npm run start:dev
 ```
 
 ### API Documentation
+Endpoint Documentation:
+Public Routes:
+- `/auth/login` (POST): User login
+- `/auth/register` (POST): User registration
+- `/products` (GET): Retrieve all products
+- `/contact-submissions` (POST): Submit contact form
 
-Once the server is running, you can access the Swagger documentation at:
+Once the server is running, you can access the Swagger documentation for detailed endpoint documentation at: http://localhost:4005/api/

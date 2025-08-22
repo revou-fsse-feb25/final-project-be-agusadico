@@ -136,6 +136,7 @@ __decorate([
     (0, swagger_1.ApiBearerAuth)("JWT-auth"),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, common_1.Get)(":id"),
+    (0, public_decorator_1.Public)(),
     (0, swagger_1.ApiOperation)({ summary: "Get a product by id" }),
     (0, swagger_1.ApiParam)({ name: "id", description: "Product ID" }),
     (0, swagger_1.ApiResponse)({

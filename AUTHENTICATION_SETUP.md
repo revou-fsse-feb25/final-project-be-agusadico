@@ -186,31 +186,31 @@ curl -X POST http://localhost:5003/orders \
 ### 1. Test Public Endpoints
 ```bash
 # Test Swagger UI
-curl http://localhost:5003/api
+curl http://localhost:4005/api
 
 # Test products (public)
-curl http://localhost:5003/products
+curl http://localhost:4005/products
 ```
 
 ### 2. Test Authentication
 ```bash
 # Test protected endpoint without token (should fail)
-curl http://localhost:5003/orders/my-orders
+curl http://localhost:4005/orders/my-orders
 
 # Test with invalid token (should fail)
 curl -H "Authorization: Bearer invalid-token" \
-  http://localhost:5003/orders/my-orders
+  http://localhost:4005/orders/my-orders
 ```
 
 ### 3. Test Role-Based Access
 ```bash
 # Test admin-only endpoint as regular user (should fail)
 curl -H "Authorization: Bearer USER_TOKEN" \
-  http://localhost:5003/auth/admin-only
+  http://localhost:4005/auth/admin-only
 
 # Test admin-only endpoint as admin (should succeed)
 curl -H "Authorization: Bearer ADMIN_TOKEN" \
-  http://localhost:5003/auth/admin-only
+  http://localhost:4005/auth/admin-only
 ```
 
 ## 🔒 Security Best Practices

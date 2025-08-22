@@ -74,7 +74,6 @@ export class AccessControlMiddleware implements NestMiddleware {
       { path: '/auth/login', method: 'POST' },
       { path: '/auth/register', method: 'POST' },
       { path: '/api', method: 'GET' }, // Swagger docs
-      // '/customers' GET route removed to make it private
       { path: '/products', method: 'GET' }, // Public product endpoints (changed from /products/public)
       { path: '/product-relations', method: 'GET' }, // Make product relations readable
       { path: '/contact-submissions', method: 'POST' }, // Allow public submissions

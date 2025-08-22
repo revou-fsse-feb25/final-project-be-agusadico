@@ -5,14 +5,17 @@ export declare class ProductsController {
     private readonly productsService;
     constructor(productsService: ProductsService);
     findAllPublic(): Promise<{
-        id: number;
+        description: string | null;
         name: string;
+        image: string;
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        tags: string[];
         category: string;
         price: number;
         originalPrice: number | null;
         discount: string | null;
-        image: string;
-        description: string | null;
         features: string[];
         sku: string | null;
         rating: number | null;
@@ -21,31 +24,31 @@ export declare class ProductsController {
         slug: string | null;
         categories: string[];
         galleryImages: string[];
-        tags: string[];
-        createdAt: Date;
-        updatedAt: Date;
     }[]>;
     findOnePublic(id: number): Promise<{
         orderItems: {
-            id: number;
             name: string;
+            image: string;
+            id: number;
             category: string | null;
             price: number;
-            image: string;
-            quantity: number;
-            orderId: number;
             productId: number | null;
+            orderId: number;
+            quantity: number;
         }[];
         relatedProducts: ({
             relatedProduct: {
-                id: number;
+                description: string | null;
                 name: string;
+                image: string;
+                id: number;
+                createdAt: Date;
+                updatedAt: Date;
+                tags: string[];
                 category: string;
                 price: number;
                 originalPrice: number | null;
                 discount: string | null;
-                image: string;
-                description: string | null;
                 features: string[];
                 sku: string | null;
                 rating: number | null;
@@ -54,9 +57,6 @@ export declare class ProductsController {
                 slug: string | null;
                 categories: string[];
                 galleryImages: string[];
-                tags: string[];
-                createdAt: Date;
-                updatedAt: Date;
             };
         } & {
             id: number;
@@ -65,14 +65,17 @@ export declare class ProductsController {
             tag: string;
         })[];
     } & {
-        id: number;
+        description: string | null;
         name: string;
+        image: string;
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        tags: string[];
         category: string;
         price: number;
         originalPrice: number | null;
         discount: string | null;
-        image: string;
-        description: string | null;
         features: string[];
         sku: string | null;
         rating: number | null;
@@ -81,31 +84,31 @@ export declare class ProductsController {
         slug: string | null;
         categories: string[];
         galleryImages: string[];
-        tags: string[];
-        createdAt: Date;
-        updatedAt: Date;
     }>;
     findBySlugPublic(slug: string): Promise<{
         orderItems: {
-            id: number;
             name: string;
+            image: string;
+            id: number;
             category: string | null;
             price: number;
-            image: string;
-            quantity: number;
-            orderId: number;
             productId: number | null;
+            orderId: number;
+            quantity: number;
         }[];
         relatedProducts: ({
             relatedProduct: {
-                id: number;
+                description: string | null;
                 name: string;
+                image: string;
+                id: number;
+                createdAt: Date;
+                updatedAt: Date;
+                tags: string[];
                 category: string;
                 price: number;
                 originalPrice: number | null;
                 discount: string | null;
-                image: string;
-                description: string | null;
                 features: string[];
                 sku: string | null;
                 rating: number | null;
@@ -114,9 +117,6 @@ export declare class ProductsController {
                 slug: string | null;
                 categories: string[];
                 galleryImages: string[];
-                tags: string[];
-                createdAt: Date;
-                updatedAt: Date;
             };
         } & {
             id: number;
@@ -125,14 +125,17 @@ export declare class ProductsController {
             tag: string;
         })[];
     } & {
-        id: number;
+        description: string | null;
         name: string;
+        image: string;
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        tags: string[];
         category: string;
         price: number;
         originalPrice: number | null;
         discount: string | null;
-        image: string;
-        description: string | null;
         features: string[];
         sku: string | null;
         rating: number | null;
@@ -141,19 +144,19 @@ export declare class ProductsController {
         slug: string | null;
         categories: string[];
         galleryImages: string[];
-        tags: string[];
-        createdAt: Date;
-        updatedAt: Date;
     }>;
     create(createProductDto: CreateProductDto): Promise<{
-        id: number;
+        description: string | null;
         name: string;
+        image: string;
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        tags: string[];
         category: string;
         price: number;
         originalPrice: number | null;
         discount: string | null;
-        image: string;
-        description: string | null;
         features: string[];
         sku: string | null;
         rating: number | null;
@@ -162,19 +165,19 @@ export declare class ProductsController {
         slug: string | null;
         categories: string[];
         galleryImages: string[];
-        tags: string[];
-        createdAt: Date;
-        updatedAt: Date;
     }>;
     findAll(): Promise<{
-        id: number;
+        description: string | null;
         name: string;
+        image: string;
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        tags: string[];
         category: string;
         price: number;
         originalPrice: number | null;
         discount: string | null;
-        image: string;
-        description: string | null;
         features: string[];
         sku: string | null;
         rating: number | null;
@@ -183,31 +186,31 @@ export declare class ProductsController {
         slug: string | null;
         categories: string[];
         galleryImages: string[];
-        tags: string[];
-        createdAt: Date;
-        updatedAt: Date;
     }[]>;
     findOne(id: number): Promise<{
         orderItems: {
-            id: number;
             name: string;
+            image: string;
+            id: number;
             category: string | null;
             price: number;
-            image: string;
-            quantity: number;
-            orderId: number;
             productId: number | null;
+            orderId: number;
+            quantity: number;
         }[];
         relatedProducts: ({
             relatedProduct: {
-                id: number;
+                description: string | null;
                 name: string;
+                image: string;
+                id: number;
+                createdAt: Date;
+                updatedAt: Date;
+                tags: string[];
                 category: string;
                 price: number;
                 originalPrice: number | null;
                 discount: string | null;
-                image: string;
-                description: string | null;
                 features: string[];
                 sku: string | null;
                 rating: number | null;
@@ -216,9 +219,6 @@ export declare class ProductsController {
                 slug: string | null;
                 categories: string[];
                 galleryImages: string[];
-                tags: string[];
-                createdAt: Date;
-                updatedAt: Date;
             };
         } & {
             id: number;
@@ -227,14 +227,17 @@ export declare class ProductsController {
             tag: string;
         })[];
     } & {
-        id: number;
+        description: string | null;
         name: string;
+        image: string;
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        tags: string[];
         category: string;
         price: number;
         originalPrice: number | null;
         discount: string | null;
-        image: string;
-        description: string | null;
         features: string[];
         sku: string | null;
         rating: number | null;
@@ -243,31 +246,31 @@ export declare class ProductsController {
         slug: string | null;
         categories: string[];
         galleryImages: string[];
-        tags: string[];
-        createdAt: Date;
-        updatedAt: Date;
     }>;
     findBySlug(slug: string): Promise<{
         orderItems: {
-            id: number;
             name: string;
+            image: string;
+            id: number;
             category: string | null;
             price: number;
-            image: string;
-            quantity: number;
-            orderId: number;
             productId: number | null;
+            orderId: number;
+            quantity: number;
         }[];
         relatedProducts: ({
             relatedProduct: {
-                id: number;
+                description: string | null;
                 name: string;
+                image: string;
+                id: number;
+                createdAt: Date;
+                updatedAt: Date;
+                tags: string[];
                 category: string;
                 price: number;
                 originalPrice: number | null;
                 discount: string | null;
-                image: string;
-                description: string | null;
                 features: string[];
                 sku: string | null;
                 rating: number | null;
@@ -276,9 +279,6 @@ export declare class ProductsController {
                 slug: string | null;
                 categories: string[];
                 galleryImages: string[];
-                tags: string[];
-                createdAt: Date;
-                updatedAt: Date;
             };
         } & {
             id: number;
@@ -287,14 +287,17 @@ export declare class ProductsController {
             tag: string;
         })[];
     } & {
-        id: number;
+        description: string | null;
         name: string;
+        image: string;
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        tags: string[];
         category: string;
         price: number;
         originalPrice: number | null;
         discount: string | null;
-        image: string;
-        description: string | null;
         features: string[];
         sku: string | null;
         rating: number | null;
@@ -303,19 +306,19 @@ export declare class ProductsController {
         slug: string | null;
         categories: string[];
         galleryImages: string[];
-        tags: string[];
-        createdAt: Date;
-        updatedAt: Date;
     }>;
     update(id: number, updateProductDto: UpdateProductDto): Promise<{
-        id: number;
+        description: string | null;
         name: string;
+        image: string;
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        tags: string[];
         category: string;
         price: number;
         originalPrice: number | null;
         discount: string | null;
-        image: string;
-        description: string | null;
         features: string[];
         sku: string | null;
         rating: number | null;
@@ -324,19 +327,19 @@ export declare class ProductsController {
         slug: string | null;
         categories: string[];
         galleryImages: string[];
-        tags: string[];
-        createdAt: Date;
-        updatedAt: Date;
     }>;
     remove(id: number): Promise<{
-        id: number;
+        description: string | null;
         name: string;
+        image: string;
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        tags: string[];
         category: string;
         price: number;
         originalPrice: number | null;
         discount: string | null;
-        image: string;
-        description: string | null;
         features: string[];
         sku: string | null;
         rating: number | null;
@@ -345,8 +348,5 @@ export declare class ProductsController {
         slug: string | null;
         categories: string[];
         galleryImages: string[];
-        tags: string[];
-        createdAt: Date;
-        updatedAt: Date;
     }>;
 }

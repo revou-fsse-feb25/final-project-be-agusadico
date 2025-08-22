@@ -95,6 +95,7 @@ export class ProductsController {
   @ApiBearerAuth("JWT-auth")
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get(":id")
+  @Public()
   @ApiOperation({ summary: "Get a product by id" })
   @ApiParam({ name: "id", description: "Product ID" })
   @ApiResponse({
