@@ -1,0 +1,1029 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 15.13 (Homebrew)
+-- Dumped by pg_dump version 17.0
+
+-- Started on 2025-08-23 00:03:54 WIB
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 4 (class 2615 OID 2200)
+-- Name: public; Type: SCHEMA; Schema: -; Owner: pg_database_owner
+--
+
+CREATE SCHEMA public;
+
+
+ALTER SCHEMA public OWNER TO pg_database_owner;
+
+--
+-- TOC entry 3819 (class 0 OID 0)
+-- Dependencies: 4
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: pg_database_owner
+--
+
+COMMENT ON SCHEMA public IS 'standard public schema';
+
+
+--
+-- TOC entry 861 (class 1247 OID 17114)
+-- Name: OrderStatus; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public."OrderStatus" AS ENUM (
+    'PENDING',
+    'DELIVERED',
+    'CANCELED'
+);
+
+
+ALTER TYPE public."OrderStatus" OWNER TO postgres;
+
+--
+-- TOC entry 858 (class 1247 OID 17108)
+-- Name: OrderType; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public."OrderType" AS ENUM (
+    'DINE_IN',
+    'TAKE_AWAY'
+);
+
+
+ALTER TYPE public."OrderType" OWNER TO postgres;
+
+--
+-- TOC entry 891 (class 1247 OID 17578)
+-- Name: UserRole; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public."UserRole" AS ENUM (
+    'USER',
+    'ADMIN'
+);
+
+
+ALTER TYPE public."UserRole" OWNER TO postgres;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 228 (class 1259 OID 17187)
+-- Name: Billing; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Billing" (
+    id integer NOT NULL,
+    name text NOT NULL,
+    address text NOT NULL,
+    "postalCode" text NOT NULL,
+    "orderId" integer NOT NULL
+);
+
+
+ALTER TABLE public."Billing" OWNER TO postgres;
+
+--
+-- TOC entry 227 (class 1259 OID 17186)
+-- Name: Billing_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."Billing_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public."Billing_id_seq" OWNER TO postgres;
+
+--
+-- TOC entry 3820 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: Billing_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."Billing_id_seq" OWNED BY public."Billing".id;
+
+
+--
+-- TOC entry 232 (class 1259 OID 17205)
+-- Name: ContactSubmission; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."ContactSubmission" (
+    id integer NOT NULL,
+    name text NOT NULL,
+    phone text NOT NULL,
+    email text NOT NULL,
+    topic text NOT NULL,
+    location text NOT NULL,
+    message text NOT NULL,
+    "submittedAt" timestamp(3) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+ALTER TABLE public."ContactSubmission" OWNER TO postgres;
+
+--
+-- TOC entry 231 (class 1259 OID 17204)
+-- Name: ContactSubmission_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."ContactSubmission_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public."ContactSubmission_id_seq" OWNER TO postgres;
+
+--
+-- TOC entry 3821 (class 0 OID 0)
+-- Dependencies: 231
+-- Name: ContactSubmission_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."ContactSubmission_id_seq" OWNED BY public."ContactSubmission".id;
+
+
+--
+-- TOC entry 220 (class 1259 OID 17148)
+-- Name: Customer; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Customer" (
+    id integer NOT NULL,
+    "customerId" text NOT NULL,
+    name text NOT NULL,
+    email text NOT NULL,
+    password text,
+    username text,
+    phone text,
+    address text,
+    city text,
+    birthday timestamp(3) without time zone,
+    image text,
+    "joinDate" timestamp(3) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    location text,
+    "totalSpent" double precision DEFAULT 0 NOT NULL,
+    "createdAt" timestamp(3) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "updatedAt" timestamp(3) without time zone NOT NULL,
+    role public."UserRole" DEFAULT 'USER'::public."UserRole" NOT NULL
+);
+
+
+ALTER TABLE public."Customer" OWNER TO postgres;
+
+--
+-- TOC entry 219 (class 1259 OID 17147)
+-- Name: Customer_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."Customer_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public."Customer_id_seq" OWNER TO postgres;
+
+--
+-- TOC entry 3822 (class 0 OID 0)
+-- Dependencies: 219
+-- Name: Customer_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."Customer_id_seq" OWNED BY public."Customer".id;
+
+
+--
+-- TOC entry 222 (class 1259 OID 17160)
+-- Name: LastOrder; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."LastOrder" (
+    id integer NOT NULL,
+    amount double precision NOT NULL,
+    date timestamp(3) without time zone NOT NULL,
+    "customerId" integer NOT NULL
+);
+
+
+ALTER TABLE public."LastOrder" OWNER TO postgres;
+
+--
+-- TOC entry 221 (class 1259 OID 17159)
+-- Name: LastOrder_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."LastOrder_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public."LastOrder_id_seq" OWNER TO postgres;
+
+--
+-- TOC entry 3823 (class 0 OID 0)
+-- Dependencies: 221
+-- Name: LastOrder_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."LastOrder_id_seq" OWNED BY public."LastOrder".id;
+
+
+--
+-- TOC entry 224 (class 1259 OID 17167)
+-- Name: Order; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Order" (
+    id integer NOT NULL,
+    "orderId" text NOT NULL,
+    date timestamp(3) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "createdAt" timestamp(3) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "bookedAtIso" timestamp(3) without time zone,
+    "customerName" text NOT NULL,
+    "typeOrder" public."OrderType" NOT NULL,
+    amount double precision NOT NULL,
+    status public."OrderStatus" NOT NULL,
+    note text,
+    "customerId" integer
+);
+
+
+ALTER TABLE public."Order" OWNER TO postgres;
+
+--
+-- TOC entry 226 (class 1259 OID 17178)
+-- Name: OrderItem; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."OrderItem" (
+    id integer NOT NULL,
+    name text NOT NULL,
+    image text NOT NULL,
+    quantity integer NOT NULL,
+    price double precision NOT NULL,
+    category text,
+    "orderId" integer NOT NULL,
+    "productId" integer
+);
+
+
+ALTER TABLE public."OrderItem" OWNER TO postgres;
+
+--
+-- TOC entry 225 (class 1259 OID 17177)
+-- Name: OrderItem_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."OrderItem_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public."OrderItem_id_seq" OWNER TO postgres;
+
+--
+-- TOC entry 3824 (class 0 OID 0)
+-- Dependencies: 225
+-- Name: OrderItem_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."OrderItem_id_seq" OWNED BY public."OrderItem".id;
+
+
+--
+-- TOC entry 223 (class 1259 OID 17166)
+-- Name: Order_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."Order_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public."Order_id_seq" OWNER TO postgres;
+
+--
+-- TOC entry 3825 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: Order_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."Order_id_seq" OWNED BY public."Order".id;
+
+
+--
+-- TOC entry 216 (class 1259 OID 17122)
+-- Name: Product; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Product" (
+    id integer NOT NULL,
+    name text NOT NULL,
+    category text NOT NULL,
+    price double precision NOT NULL,
+    "originalPrice" double precision,
+    discount text,
+    image text NOT NULL,
+    description text,
+    features text[] DEFAULT ARRAY[]::text[],
+    sku text,
+    rating double precision DEFAULT 0,
+    "reviewCount" integer DEFAULT 0,
+    "inStock" boolean DEFAULT true NOT NULL,
+    slug text,
+    categories text[] DEFAULT ARRAY[]::text[],
+    "galleryImages" text[] DEFAULT ARRAY[]::text[],
+    tags text[] DEFAULT ARRAY[]::text[],
+    "createdAt" timestamp(3) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "updatedAt" timestamp(3) without time zone NOT NULL
+);
+
+
+ALTER TABLE public."Product" OWNER TO postgres;
+
+--
+-- TOC entry 218 (class 1259 OID 17139)
+-- Name: ProductRelation; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."ProductRelation" (
+    id integer NOT NULL,
+    "productId" integer NOT NULL,
+    "relatedProductId" integer NOT NULL,
+    tag text NOT NULL
+);
+
+
+ALTER TABLE public."ProductRelation" OWNER TO postgres;
+
+--
+-- TOC entry 217 (class 1259 OID 17138)
+-- Name: ProductRelation_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."ProductRelation_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public."ProductRelation_id_seq" OWNER TO postgres;
+
+--
+-- TOC entry 3826 (class 0 OID 0)
+-- Dependencies: 217
+-- Name: ProductRelation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."ProductRelation_id_seq" OWNED BY public."ProductRelation".id;
+
+
+--
+-- TOC entry 215 (class 1259 OID 17121)
+-- Name: Product_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."Product_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public."Product_id_seq" OWNER TO postgres;
+
+--
+-- TOC entry 3827 (class 0 OID 0)
+-- Dependencies: 215
+-- Name: Product_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."Product_id_seq" OWNED BY public."Product".id;
+
+
+--
+-- TOC entry 230 (class 1259 OID 17196)
+-- Name: Shipping; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Shipping" (
+    id integer NOT NULL,
+    name text NOT NULL,
+    address text NOT NULL,
+    "postalCode" text NOT NULL,
+    "orderId" integer NOT NULL
+);
+
+
+ALTER TABLE public."Shipping" OWNER TO postgres;
+
+--
+-- TOC entry 229 (class 1259 OID 17195)
+-- Name: Shipping_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."Shipping_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public."Shipping_id_seq" OWNER TO postgres;
+
+--
+-- TOC entry 3828 (class 0 OID 0)
+-- Dependencies: 229
+-- Name: Shipping_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."Shipping_id_seq" OWNED BY public."Shipping".id;
+
+
+--
+-- TOC entry 214 (class 1259 OID 17098)
+-- Name: _prisma_migrations; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public._prisma_migrations (
+    id character varying(36) NOT NULL,
+    checksum character varying(64) NOT NULL,
+    finished_at timestamp with time zone,
+    migration_name character varying(255) NOT NULL,
+    logs text,
+    rolled_back_at timestamp with time zone,
+    started_at timestamp with time zone DEFAULT now() NOT NULL,
+    applied_steps_count integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE public._prisma_migrations OWNER TO postgres;
+
+--
+-- TOC entry 3612 (class 2604 OID 17190)
+-- Name: Billing id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Billing" ALTER COLUMN id SET DEFAULT nextval('public."Billing_id_seq"'::regclass);
+
+
+--
+-- TOC entry 3614 (class 2604 OID 17208)
+-- Name: ContactSubmission id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."ContactSubmission" ALTER COLUMN id SET DEFAULT nextval('public."ContactSubmission_id_seq"'::regclass);
+
+
+--
+-- TOC entry 3602 (class 2604 OID 17151)
+-- Name: Customer id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Customer" ALTER COLUMN id SET DEFAULT nextval('public."Customer_id_seq"'::regclass);
+
+
+--
+-- TOC entry 3607 (class 2604 OID 17163)
+-- Name: LastOrder id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."LastOrder" ALTER COLUMN id SET DEFAULT nextval('public."LastOrder_id_seq"'::regclass);
+
+
+--
+-- TOC entry 3608 (class 2604 OID 17170)
+-- Name: Order id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Order" ALTER COLUMN id SET DEFAULT nextval('public."Order_id_seq"'::regclass);
+
+
+--
+-- TOC entry 3611 (class 2604 OID 17181)
+-- Name: OrderItem id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."OrderItem" ALTER COLUMN id SET DEFAULT nextval('public."OrderItem_id_seq"'::regclass);
+
+
+--
+-- TOC entry 3592 (class 2604 OID 17125)
+-- Name: Product id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Product" ALTER COLUMN id SET DEFAULT nextval('public."Product_id_seq"'::regclass);
+
+
+--
+-- TOC entry 3601 (class 2604 OID 17142)
+-- Name: ProductRelation id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."ProductRelation" ALTER COLUMN id SET DEFAULT nextval('public."ProductRelation_id_seq"'::regclass);
+
+
+--
+-- TOC entry 3613 (class 2604 OID 17199)
+-- Name: Shipping id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Shipping" ALTER COLUMN id SET DEFAULT nextval('public."Shipping_id_seq"'::regclass);
+
+
+--
+-- TOC entry 3809 (class 0 OID 17187)
+-- Dependencies: 228
+-- Data for Name: Billing; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Billing" (id, name, address, "postalCode", "orderId") FROM stdin;
+2	John Doe	123 Main St, New York	10001	2
+\.
+
+
+--
+-- TOC entry 3813 (class 0 OID 17205)
+-- Dependencies: 232
+-- Data for Name: ContactSubmission; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."ContactSubmission" (id, name, phone, email, topic, location, message, "submittedAt") FROM stdin;
+2	Jane Smith	+1987654321	jane.smith@example.com	Reservation	New York	I would like to make a reservation for 4 people on Friday at 7 PM.	2025-08-20 13:37:46.586
+3	Agus Purwadi	+6281122223333	agus@revou.co	sponsorship	Jakarta	Hi, I would like to offer you sponsorship. Please contact me. Thanks	2025-08-21 06:29:05.273
+4	Agus Purwadi	+6281122223333	agus@revou.co	sponsorship	Jakarta	Hi, I would like to offer you sponsorship. Please contact me. Thanks	2025-08-21 06:50:12.966
+\.
+
+
+--
+-- TOC entry 3801 (class 0 OID 17148)
+-- Dependencies: 220
+-- Data for Name: Customer; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Customer" (id, "customerId", name, email, password, username, phone, address, city, birthday, image, "joinDate", location, "totalSpent", "createdAt", "updatedAt", role) FROM stdin;
+16	CUST-1755698054499-J1YP17	John Doe	admin@example.com	$2b$10$6.AEQ9LRUkr5ltBuJMHcBeuSsuW8poWnVcjcvsCTMeP6r4dVg4/bi	admin01	+1234567890	123 Main St	New York	\N	\N	2025-08-20 13:54:14.5	NYC	0	2025-08-20 13:54:14.5	2025-08-20 13:54:14.5	ADMIN
+14	CUST-001	John Doe	john.doe@example.com	hashed_password_here	johndoe	+1234567890	123 Main St	New York	1990-01-15 00:00:00	https://example.com/images/john-doe.jpg	2025-08-20 13:37:46.57	New York, USA	250.75	2025-08-20 13:37:46.57	2025-08-20 13:37:46.57	USER
+17	CUST-1755612354499-J1YP16	Fajar Setiawan	fajar123@gmail.com	fajar123	fajar123	+6282112345678	Menteng, Jakarta	Jakarta	2000-01-01 00:00:00	\N	2025-08-22 04:32:59.67	Jakarta	20	2025-08-22 04:32:59.67	2025-08-22 04:32:59.67	USER
+18	CUST-1755844918162-99PQN6	Ryan Dminor	ryan123@gmail.com	$2b$10$YOx7hiDqO8GREad/j0GVwurtrpgrm0q/75woNgB/krT.0jYL/MNHG	ryan123	+621234567890	Tambun Selatan	Bekasi	2000-02-02 00:00:00	\N	2025-08-22 06:41:58.164	Bekasi	0	2025-08-22 06:41:58.164	2025-08-22 06:41:58.164	USER
+19	CUST-1755846236766-8NNB30	Andi Toystory	andi123@gmail.com	$2b$10$J3uun7rWh9cc8NxQCxqT7OAc/fbvB1rQeapc/xP4OR2vj/0RAKBjW	\N	\N	\N	\N	2000-03-03 00:00:00	\N	2025-08-22 07:03:56.769	\N	0	2025-08-22 07:03:56.769	2025-08-22 07:03:56.769	USER
+20	CUST-1755847276030-F0POE6	Ariana Grande	ariana123@gmail.com	$2b$10$XGgk/1q9SKgFgucCWGkUpO4Of47lwmnfCmkZH7plg4pLahw9czXOS	ariana123	8125556666	Bekasi Timur	Bekasi	2000-04-04 00:00:00	\N	2025-08-22 07:21:16.036	\N	0	2025-08-22 07:21:16.036	2025-08-22 07:21:16.036	USER
+21	CUST-1755847706850-IMERIT	Reza Rahardian	reza123@gmail.com	$2b$10$kMV36/s..majcWXmHN9gXeUxpyC2bB6h8UL64x23zJo7Sgy8d.IGe	reza123	81266667777	Menteng Jakarta Pusat	Jakarta	2000-05-05 00:00:00	\N	2025-08-22 07:28:26.856	\N	0	2025-08-22 07:28:26.856	2025-08-22 07:28:26.856	USER
+22	CUST-1755848684756-G83MX4	Indhiana Skolastika	indhi123@gmail.com	$2b$10$J4VwwSRwYLwrWzKGXiui9.k0t17.nzv1NU9DSLg8ziLrTRtuVTK2O	indhi123	82188889999	Karawang Barat	Karawang	2000-06-06 00:00:00	\N	2025-08-22 07:44:44.812	\N	0	2025-08-22 07:44:44.812	2025-08-22 07:44:44.812	USER
+\.
+
+
+--
+-- TOC entry 3803 (class 0 OID 17160)
+-- Dependencies: 222
+-- Data for Name: LastOrder; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."LastOrder" (id, amount, date, "customerId") FROM stdin;
+2	23.98	2025-08-20 13:37:46.581	14
+\.
+
+
+--
+-- TOC entry 3805 (class 0 OID 17167)
+-- Dependencies: 224
+-- Data for Name: Order; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Order" (id, "orderId", date, "createdAt", "bookedAtIso", "customerName", "typeOrder", amount, status, note, "customerId") FROM stdin;
+2	ORD-001	2025-08-20 13:37:46.574	2025-08-20 13:37:46.574	\N	John Doe	DINE_IN	23.98	DELIVERED	No onions please	14
+\.
+
+
+--
+-- TOC entry 3807 (class 0 OID 17178)
+-- Dependencies: 226
+-- Data for Name: OrderItem; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."OrderItem" (id, name, image, quantity, price, category, "orderId", "productId") FROM stdin;
+3	Beef Burger	https://example.com/images/beef-burger.jpg	1	12.99	Burger	2	3
+4	Chicken Pasta	https://example.com/images/chicken-pasta.jpg	1	10.99	Pasta	2	4
+\.
+
+
+--
+-- TOC entry 3797 (class 0 OID 17122)
+-- Dependencies: 216
+-- Data for Name: Product; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Product" (id, name, category, price, "originalPrice", discount, image, description, features, sku, rating, "reviewCount", "inStock", slug, categories, "galleryImages", tags, "createdAt", "updatedAt") FROM stdin;
+3	Legendary Chicken Ramen	Ramen	12.99	14.99	15%	https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3ob9yZTr1GrN0i9hgzAHWQjZ4Cd3PpeBlVSfUD	Rich, flavorful chicken broth paired with premium ramen noodles, juicy grilled chicken, and perfectly cooked egg. Every bowl promises an authentic, legendary ramen experience.	{"Slow-cooked chicken broth for deep flavor","Premium ramen noodles with perfect texture","Topped with tender grilled chicken & fresh toppings"}	RAM-001	4.8	120	t	legendary-chicken-ramen	{Ramen,Popular,Chicken}	{https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3ovkkAvr076Tz4X2KVUD1Ql3YGZyInOSmJuqwa,https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3oVRp6sdCW6jO9JZ4HhPRoqTnv0xuzGpsadfg7,https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3onsHvgzq3uYq2ekOzv6T0SPdQ3wtbM9yVEgWU}	{ramen,chicken,popular}	2025-08-20 13:37:46.56	2025-08-20 13:37:46.56
+4	Karaage Dry Ramen	Dry Ramen	10.99	\N	\N	https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3oeEN2LEGBrLY6W34ExyI2pbUQDJlHu1vzMnK8	Irresistibly crispy Japanese fried chicken atop dry ramen, tossed with a savory, aromatic sauce and fresh garnishes for a bold, modern flavor twist.	{"Crispy fried chicken for a satisfying crunch","Dry ramen noodles for a satisfying texture","Savory, aromatic sauce for a satisfying flavor","Fresh garnishes for a satisfying finish"}	KAR-001	4.5	85	t	karaage-dry-ramen	{"Dry Ramen",Chicken}	{https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3o5miofEYTgau2RKeZo6P0v7SOmtcLC415Yb8H,https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3oTJJGZYpDfzYUogclnKdJEASm5jVrt8XeCxsI,https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3oFozCmFxxGkAn1ZSv8Pmgb0lR3yKMBdzUea2t}	{karaage,"dry ramen",chicken}	2025-08-20 13:37:46.565	2025-08-20 13:37:46.565
+6	Chicken Katsudon	Donburi	14	16	13%	https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3oPJmot2PnSVkGERqm1w7ouIDfsY2W3ebPCjhZ	Classic Japanese rice bowl with crispy chicken cutlet, savory-sweet sauce, and fluffy steamed rice. Comforting and satisfying in every bite.	{"Golden fried chicken cutlet","Homemade katsudon sauce","Served over fluffy Japanese rice"}	KTSD-001	4.5	60	t	chicken-katsudon	{Katsudon,Chicken}	{https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3okYW3XQVtRJaboGFExm3659MsvfUjD1V8IHWO,https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3owx9PeWZYAvHZWCRDi0mdhbgB38PL6axjtSEG,https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3oAefJLJQfymrukGJEM1xWXSo6bLUsP2j3wi7z}	{katsudon,chicken}	2025-08-21 14:04:53.524	2025-08-21 14:04:53.524
+7	Chicken Curry Katsudon	Donburi	14	16	13%	https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3oG5sWIIQFFxQt5jrn8gJSPf27dabUAV1shiBT	A fusion of crispy chicken katsu, savory Japanese curry, and steamed rice. Each bowl delivers hearty flavor with a touch of spice.	{"Crispy chicken katsu cutlet","Rich Japanese curry sauce","Hearty, filling rice bowl meal"}	KTSD-002	4.8	50	t	chicken-curry-katsudon	{Katsudon,Chicken}	{https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3ouIWcZHfwyCUfgKGQ1paBtzdoM8eS53HFXhRx,https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3omG4KWBTFh9LAqPkr3XMa2nRJeTbQcVx1I0Wd,https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3oKlvDYtupUxVDHNlkztdge91vjuMI6qcA7ZmJ}	{katsudon,chicken}	2025-08-21 14:04:53.524	2025-08-21 14:04:53.524
+8	Seafood Spicy Crunchy Roll	Sushi	10	14	29%	https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3oqz12XSb4WOHrca2neo5CJgAFQIlDZTB8hGfR	A delectable roll packed with fresh seafood, a kick of spice, and a crispy crunch in every bite. Perfect for sushi lovers who crave bold flavor.	{"Premium mixed seafood filling","Crispy tempura crunch topping","Spicy mayo drizzle for an extra kick"}	SSH-001	4.7	80	t	seafood-spicy-cruncy-roll	{Sushi}	{https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3oZdwcJI3mOyjSTEVJkDzRY58n2MvAgWU7dQHc,https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3oA1ilwdQfymrukGJEM1xWXSo6bLUsP2j3wi7z,https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3obQP3aP1GrN0i9hgzAHWQjZ4Cd3PpeBlVSfUD}	{sushi}	2025-08-21 14:04:53.524	2025-08-21 14:04:53.524
+9	Mango Yakult	Drinks	5	8	23%	https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3oG5g6fcKFFxQt5jrn8gJSPf27dabUAV1shiBT	Refreshing blend of sweet mango and tangy Yakult, served cold for a revitalizing, probiotic-packed drink that energizes your day.	{"Made with real mango puree","Probiotic-rich Yakult base","Naturally sweet & tangy flavor combo"}	DRK-001	4.9	50	t	mango-yakult	{Drinks,Mango}	{https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3oTu9MhRpDfzYUogclnKdJEASm5jVrt8XeCxsI,https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3okNUgl5VtRJaboGFExm3659MsvfUjD1V8IHWO,https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3omRWC3ZTFh9LAqPkr3XMa2nRJeTbQcVx1I0Wd}	{drinks,mango}	2025-08-21 14:04:53.524	2025-08-21 14:04:53.524
+10	Nori Gyoza Skin	Agemono & Gyoza	15	20	25%	https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3ombNKO3TFh9LAqPkr3XMa2nRJeTbQcVx1I0Wd	Crispy pan-fried gyoza wrapped in nori-infused skin, filled with juicy chicken and savory spices. Ideal as an appetizer or main dish.	{"Unique nori seaweed-infused skin","Juicy, seasoned chicken filling","Perfectly crisped for delicious texture"}	AGM-001	4.5	40	t	nori-gyoza-skin	{Agemono,Gyoza}	{https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3og28T1KDcOmuvRbBIW30KDjYSc2a5lwdZUA6N,https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3ovMDWD276Tz4X2KVUD1Ql3YGZyInOSmJuqwaC,https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3oYnMLKJ9Nwo4lquP6HF52MbXUsnIcELWrpBkm}	{agemono,gyoza}	2025-08-21 14:04:53.524	2025-08-21 14:04:53.524
+11	Seafood Maki Sushi Rolls	Sushi	22	\N	\N	https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3odTyFSef3usyDJHvbGVRzSw1x5kLQf9glaFYO	Classic maki sushi rolls featuring a generous portion of fresh seafood, wrapped in vinegared rice and seaweed. A must-try for sushi enthusiasts.	{"Fresh mixed seafood selection","Traditional vinegared sushi rice","Hand-rolled in premium nori sheets"}	SSH-002	4.5	30	t	seafood-maki-sushi-rolls	{Sushi}	{https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3owmnkpfZYAvHZWCRDi0mdhbgB38PL6axjtSEG,https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3owrwYuZYAvHZWCRDi0mdhbgB38PL6axjtSEGV,https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3oF8X399xxGkAn1ZSv8Pmgb0lR3yKMBdzUea2t}	{Sushi}	2025-08-21 14:04:53.524	2025-08-21 14:04:53.524
+\.
+
+
+--
+-- TOC entry 3799 (class 0 OID 17139)
+-- Dependencies: 218
+-- Data for Name: ProductRelation; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."ProductRelation" (id, "productId", "relatedProductId", tag) FROM stdin;
+2	3	4	popular
+\.
+
+
+--
+-- TOC entry 3811 (class 0 OID 17196)
+-- Dependencies: 230
+-- Data for Name: Shipping; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Shipping" (id, name, address, "postalCode", "orderId") FROM stdin;
+2	John Doe	123 Main St, New York	10001	2
+\.
+
+
+--
+-- TOC entry 3795 (class 0 OID 17098)
+-- Dependencies: 214
+-- Data for Name: _prisma_migrations; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public._prisma_migrations (id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count) FROM stdin;
+2d6e6376-19f8-44e8-bbb2-e7d1c3eafbf5	ad9a8d1c34d5b459a5d76cd7159011e936927790834423cd587b5190bb4a0e33	2025-08-16 14:44:27.374678+07	20250816074427_init	\N	\N	2025-08-16 14:44:27.322041+07	1
+8cb65aae-0e78-4330-a82b-5a1b8b237c9b	f4f4995264f8efcf1b5159b0140d50261b332b9903fee127c96ee46364a2c5f5	2025-08-17 17:07:41.342428+07	20250817100741_add_user_role	\N	\N	2025-08-17 17:07:41.338144+07	1
+\.
+
+
+--
+-- TOC entry 3829 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: Billing_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Billing_id_seq"', 2, true);
+
+
+--
+-- TOC entry 3830 (class 0 OID 0)
+-- Dependencies: 231
+-- Name: ContactSubmission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."ContactSubmission_id_seq"', 4, true);
+
+
+--
+-- TOC entry 3831 (class 0 OID 0)
+-- Dependencies: 219
+-- Name: Customer_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Customer_id_seq"', 22, true);
+
+
+--
+-- TOC entry 3832 (class 0 OID 0)
+-- Dependencies: 221
+-- Name: LastOrder_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."LastOrder_id_seq"', 2, true);
+
+
+--
+-- TOC entry 3833 (class 0 OID 0)
+-- Dependencies: 225
+-- Name: OrderItem_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."OrderItem_id_seq"', 4, true);
+
+
+--
+-- TOC entry 3834 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: Order_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Order_id_seq"', 2, true);
+
+
+--
+-- TOC entry 3835 (class 0 OID 0)
+-- Dependencies: 217
+-- Name: ProductRelation_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."ProductRelation_id_seq"', 2, true);
+
+
+--
+-- TOC entry 3836 (class 0 OID 0)
+-- Dependencies: 215
+-- Name: Product_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Product_id_seq"', 11, true);
+
+
+--
+-- TOC entry 3837 (class 0 OID 0)
+-- Dependencies: 229
+-- Name: Shipping_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Shipping_id_seq"', 2, true);
+
+
+--
+-- TOC entry 3639 (class 2606 OID 17194)
+-- Name: Billing Billing_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Billing"
+    ADD CONSTRAINT "Billing_pkey" PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3644 (class 2606 OID 17213)
+-- Name: ContactSubmission ContactSubmission_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."ContactSubmission"
+    ADD CONSTRAINT "ContactSubmission_pkey" PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3627 (class 2606 OID 17158)
+-- Name: Customer Customer_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Customer"
+    ADD CONSTRAINT "Customer_pkey" PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3631 (class 2606 OID 17165)
+-- Name: LastOrder LastOrder_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."LastOrder"
+    ADD CONSTRAINT "LastOrder_pkey" PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3636 (class 2606 OID 17185)
+-- Name: OrderItem OrderItem_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."OrderItem"
+    ADD CONSTRAINT "OrderItem_pkey" PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3634 (class 2606 OID 17176)
+-- Name: Order Order_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Order"
+    ADD CONSTRAINT "Order_pkey" PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3622 (class 2606 OID 17146)
+-- Name: ProductRelation ProductRelation_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."ProductRelation"
+    ADD CONSTRAINT "ProductRelation_pkey" PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3619 (class 2606 OID 17137)
+-- Name: Product Product_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Product"
+    ADD CONSTRAINT "Product_pkey" PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3642 (class 2606 OID 17203)
+-- Name: Shipping Shipping_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Shipping"
+    ADD CONSTRAINT "Shipping_pkey" PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3617 (class 2606 OID 17106)
+-- Name: _prisma_migrations _prisma_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public._prisma_migrations
+    ADD CONSTRAINT _prisma_migrations_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3637 (class 1259 OID 17221)
+-- Name: Billing_orderId_key; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX "Billing_orderId_key" ON public."Billing" USING btree ("orderId");
+
+
+--
+-- TOC entry 3624 (class 1259 OID 17216)
+-- Name: Customer_customerId_key; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX "Customer_customerId_key" ON public."Customer" USING btree ("customerId");
+
+
+--
+-- TOC entry 3625 (class 1259 OID 17217)
+-- Name: Customer_email_key; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX "Customer_email_key" ON public."Customer" USING btree (email);
+
+
+--
+-- TOC entry 3628 (class 1259 OID 17218)
+-- Name: Customer_username_key; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX "Customer_username_key" ON public."Customer" USING btree (username);
+
+
+--
+-- TOC entry 3629 (class 1259 OID 17219)
+-- Name: LastOrder_customerId_key; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX "LastOrder_customerId_key" ON public."LastOrder" USING btree ("customerId");
+
+
+--
+-- TOC entry 3632 (class 1259 OID 17220)
+-- Name: Order_orderId_key; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX "Order_orderId_key" ON public."Order" USING btree ("orderId");
+
+
+--
+-- TOC entry 3623 (class 1259 OID 17215)
+-- Name: ProductRelation_productId_relatedProductId_key; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX "ProductRelation_productId_relatedProductId_key" ON public."ProductRelation" USING btree ("productId", "relatedProductId");
+
+
+--
+-- TOC entry 3620 (class 1259 OID 17214)
+-- Name: Product_slug_key; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX "Product_slug_key" ON public."Product" USING btree (slug);
+
+
+--
+-- TOC entry 3640 (class 1259 OID 17222)
+-- Name: Shipping_orderId_key; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX "Shipping_orderId_key" ON public."Shipping" USING btree ("orderId");
+
+
+--
+-- TOC entry 3651 (class 2606 OID 17253)
+-- Name: Billing Billing_orderId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Billing"
+    ADD CONSTRAINT "Billing_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES public."Order"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3647 (class 2606 OID 17233)
+-- Name: LastOrder LastOrder_customerId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."LastOrder"
+    ADD CONSTRAINT "LastOrder_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES public."Customer"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3649 (class 2606 OID 17243)
+-- Name: OrderItem OrderItem_orderId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."OrderItem"
+    ADD CONSTRAINT "OrderItem_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES public."Order"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3650 (class 2606 OID 17248)
+-- Name: OrderItem OrderItem_productId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."OrderItem"
+    ADD CONSTRAINT "OrderItem_productId_fkey" FOREIGN KEY ("productId") REFERENCES public."Product"(id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+
+--
+-- TOC entry 3648 (class 2606 OID 17238)
+-- Name: Order Order_customerId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Order"
+    ADD CONSTRAINT "Order_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES public."Customer"(id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+
+--
+-- TOC entry 3645 (class 2606 OID 17223)
+-- Name: ProductRelation ProductRelation_productId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."ProductRelation"
+    ADD CONSTRAINT "ProductRelation_productId_fkey" FOREIGN KEY ("productId") REFERENCES public."Product"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3646 (class 2606 OID 17228)
+-- Name: ProductRelation ProductRelation_relatedProductId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."ProductRelation"
+    ADD CONSTRAINT "ProductRelation_relatedProductId_fkey" FOREIGN KEY ("relatedProductId") REFERENCES public."Product"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3652 (class 2606 OID 17258)
+-- Name: Shipping Shipping_orderId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Shipping"
+    ADD CONSTRAINT "Shipping_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES public."Order"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+-- Completed on 2025-08-23 00:03:54 WIB
+
+--
+-- PostgreSQL database dump complete
+--
+

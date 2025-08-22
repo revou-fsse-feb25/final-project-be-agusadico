@@ -126,4 +126,18 @@ Public Routes:
 - `/products` (GET): Retrieve all products
 - `/contact-submissions` (POST): Submit contact form
 
+## Database SQL
+docs/ramenpresidentdbbackup.sql
+
+This file contains the SQL dump of the database schema and initial data.
+You can use this file to restore the database to its initial state.
+To restore the database, you can use the following command:
+```bash
+psql -U <username> -d <database_name> -f ramenpresidentdbbackup.sql
+```
+Replace `<username>` with your PostgreSQL username and `<database_name>` with your database name.
+Once the database is restored, you can start the server using the following command:
+```bash
+npm run start:dev
+```
 Once the server is running, you can access the Swagger documentation for detailed endpoint documentation at: http://localhost:4005/api/
