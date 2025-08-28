@@ -20,16 +20,18 @@ const update_customer_dto_1 = require("./dto/update-customer.dto");
 const update_role_dto_1 = require("./dto/update-role.dto");
 const swagger_1 = require("@nestjs/swagger");
 const customer_entity_1 = require("./entities/customer.entity");
-const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
-const roles_guard_1 = require("../auth/guards/roles.guard");
-const roles_decorator_1 = require("../auth/decorators/roles.decorator");
 const current_user_decorator_1 = require("../auth/decorators/current-user.decorator");
+const public_decorator_1 = require("../auth/decorators/public.decorator");
+const create_guest_customer_dto_1 = require("./dto/create-guest-customer.dto");
 let CustomersController = class CustomersController {
     constructor(customersService) {
         this.customersService = customersService;
     }
     create(createCustomerDto) {
         return this.customersService.create(createCustomerDto);
+    }
+    createGuest(createGuestCustomerDto) {
+        return this.customersService.createGuest(createGuestCustomerDto);
     }
     findAll() {
         return this.customersService.findAll();
@@ -64,6 +66,20 @@ __decorate([
     __metadata("design:paramtypes", [create_customer_dto_1.CreateCustomerDto]),
     __metadata("design:returntype", void 0)
 ], CustomersController.prototype, "create", null);
+__decorate([
+    (0, public_decorator_1.Public)(),
+    (0, common_1.Post)('guest'),
+    (0, swagger_1.ApiOperation)({ summary: "Create a guest customer with only name" }),
+    (0, swagger_1.ApiResponse)({
+        status: 201,
+        description: "The guest customer has been successfully created.",
+        type: customer_entity_1.Customer,
+    }),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [create_guest_customer_dto_1.CreateGuestCustomerDto]),
+    __metadata("design:returntype", void 0)
+], CustomersController.prototype, "createGuest", null);
 __decorate([
     (0, common_1.Get)(),
     (0, swagger_1.ApiOperation)({ summary: "Get all customers" }),
@@ -108,8 +124,6 @@ __decorate([
 ], CustomersController.prototype, "findByCustomerId", null);
 __decorate([
     (0, common_1.Patch)(":id"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, swagger_1.ApiBearerAuth)("JWT-auth"),
     (0, swagger_1.ApiOperation)({ summary: "Update a customer" }),
     (0, swagger_1.ApiParam)({ name: "id", description: "Customer ID" }),
     (0, swagger_1.ApiResponse)({
@@ -118,19 +132,6 @@ __decorate([
         type: customer_entity_1.Customer,
     }),
     (0, swagger_1.ApiResponse)({ status: 404, description: "Customer not found." }),
-    (0, common_1.Patch)(":id"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
-    (0, roles_decorator_1.Roles)("ADMIN"),
-    (0, swagger_1.ApiBearerAuth)("JWT-auth"),
-    (0, swagger_1.ApiOperation)({ summary: "Update a customer (Admin only)" }),
-    (0, swagger_1.ApiParam)({ name: "id", description: "Customer ID" }),
-    (0, swagger_1.ApiResponse)({
-        status: 200,
-        description: "The customer has been successfully updated.",
-        type: customer_entity_1.Customer,
-    }),
-    (0, swagger_1.ApiResponse)({ status: 404, description: "Customer not found." }),
-    (0, swagger_1.ApiResponse)({ status: 403, description: "Forbidden - Admin access required." }),
     __param(0, (0, common_1.Param)("id", common_1.ParseIntPipe)),
     __param(1, (0, common_1.Body)()),
     __param(2, (0, current_user_decorator_1.CurrentUser)()),
@@ -140,10 +141,7 @@ __decorate([
 ], CustomersController.prototype, "update", null);
 __decorate([
     (0, common_1.Patch)(":id/role"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
-    (0, roles_decorator_1.Roles)("ADMIN"),
-    (0, swagger_1.ApiBearerAuth)("JWT-auth"),
-    (0, swagger_1.ApiOperation)({ summary: "Update customer role (Admin only)" }),
+    (0, swagger_1.ApiOperation)({ summary: "Update customer role" }),
     (0, swagger_1.ApiParam)({ name: "id", description: "Customer ID" }),
     (0, swagger_1.ApiResponse)({
         status: 200,
@@ -151,7 +149,6 @@ __decorate([
         type: customer_entity_1.Customer,
     }),
     (0, swagger_1.ApiResponse)({ status: 404, description: "Customer not found." }),
-    (0, swagger_1.ApiResponse)({ status: 403, description: "Forbidden - Admin access required." }),
     __param(0, (0, common_1.Param)("id", common_1.ParseIntPipe)),
     __param(1, (0, common_1.Body)()),
     __param(2, (0, current_user_decorator_1.CurrentUser)()),

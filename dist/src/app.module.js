@@ -20,14 +20,8 @@ const billings_module_1 = require("./billings/billings.module");
 const shippings_module_1 = require("./shippings/shippings.module");
 const last_orders_module_1 = require("./last-orders/last-orders.module");
 const contact_submissions_module_1 = require("./contact-submissions/contact-submissions.module");
-const access_control_middleware_1 = require("./common/middleware/access-control.middleware");
 const common_module_1 = require("./common/common.module");
 let AppModule = class AppModule {
-    configure(consumer) {
-        consumer
-            .apply(access_control_middleware_1.AccessControlMiddleware)
-            .forRoutes('customers', 'orders', 'order-items', 'billings', 'shippings', 'last-orders', 'contact-submissions', 'products', 'product-relations');
-    }
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([

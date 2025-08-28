@@ -7,16 +7,12 @@ import {
   Param,
   Delete,
   ParseIntPipe,
-  UseGuards,
 } from "@nestjs/common";
 import { ProductsService } from "./products.service";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth } from "@nestjs/swagger";
+import { ApiTags, ApiOperation, ApiResponse, ApiParam } from "@nestjs/swagger";
 import { Product } from "./entities/product.entity";
-import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
-import { RolesGuard } from "../auth/guards/roles.guard";
-import { Roles } from "../auth/decorators/roles.decorator";
 import { Public } from "../auth/decorators/public.decorator";
 
 @ApiTags("products")
@@ -64,10 +60,7 @@ export class ProductsController {
     return this.productsService.findBySlug(slug);
   }
 
-  @ApiBearerAuth("JWT-auth")
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
-  @Roles("ADMIN")
   @ApiOperation({ summary: "Create a new product" })
   @ApiResponse({
     status: 201,
@@ -78,8 +71,6 @@ export class ProductsController {
     return this.productsService.create(createProductDto);
   }
 
-  @ApiBearerAuth("JWT-auth")
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   @Public()
   @ApiOperation({ summary: "Get all products" })
@@ -92,8 +83,6 @@ export class ProductsController {
     return this.productsService.findAll();
   }
 
-  @ApiBearerAuth("JWT-auth")
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get(":id")
   @Public()
   @ApiOperation({ summary: "Get a product by id" })
@@ -108,8 +97,6 @@ export class ProductsController {
     return this.productsService.findOne(id);
   }
 
-  @ApiBearerAuth("JWT-auth")
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get("slug/:slug")
   @ApiOperation({ summary: "Get a product by slug" })
   @ApiParam({ name: "slug", description: "Product slug" })
@@ -123,10 +110,8 @@ export class ProductsController {
     return this.productsService.findBySlug(slug);
   }
 
-  @ApiBearerAuth("JWT-auth")
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Patch(":id")
-  @Roles("ADMIN")
+  @Public()
   @ApiOperation({ summary: "Update a product" })
   @ApiParam({ name: "id", description: "Product ID" })
   @ApiResponse({
@@ -142,16 +127,13 @@ export class ProductsController {
     return this.productsService.update(id, updateProductDto);
   }
 
-  @ApiBearerAuth("JWT-auth")
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(":id")
-  @Roles("ADMIN")
+  @Public()
   @ApiOperation({ summary: "Delete a product" })
   @ApiParam({ name: "id", description: "Product ID" })
   @ApiResponse({
     status: 200,
     description: "The product has been successfully deleted.",
-    type: Product,
   })
   @ApiResponse({ status: 404, description: "Product not found." })
   remove(@Param("id", ParseIntPipe) id: number) {

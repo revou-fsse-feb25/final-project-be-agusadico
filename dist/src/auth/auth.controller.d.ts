@@ -16,6 +16,13 @@ export declare class AuthController {
             role: string;
         };
     }>;
+    logout(): Promise<{
+        message: string;
+    }>;
+    checkAuth(user: AuthenticatedUser): Promise<{
+        authenticated: boolean;
+        user: AuthenticatedUser;
+    }>;
     register(registerDto: RegisterDto): Promise<{
         message: string;
         user: {
@@ -30,13 +37,7 @@ export declare class AuthController {
     changePassword(user: AuthenticatedUser, changePasswordDto: ChangePasswordDto): Promise<{
         message: string;
     }>;
-    getProfile(user: AuthenticatedUser): Promise<{
-        id: number;
-        email: string;
-        name: string;
-        customerId: string;
-        role: string;
-    }>;
+    getProfile(user: AuthenticatedUser): Promise<AuthenticatedUser>;
     adminOnly(): Promise<{
         message: string;
     }>;

@@ -21,6 +21,19 @@ let CustomersService = class CustomersService {
             data: createCustomerDto,
         });
     }
+    async createGuest(createGuestCustomerDto) {
+        const timestamp = Date.now().toString();
+        const randomSuffix = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+        const uniqueCustomerId = `GUEST-${timestamp}-${randomSuffix}`;
+        return this.prisma.customer.create({
+            data: {
+                customerId: uniqueCustomerId,
+                name: createGuestCustomerDto.name,
+                email: `guest_${timestamp}@example.com`,
+                role: 'USER'
+            },
+        });
+    }
     async findAll() {
         return this.prisma.customer.findMany({
             include: {

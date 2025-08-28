@@ -3,10 +3,30 @@ import { CreateCustomerDto } from "./dto/create-customer.dto";
 import { UpdateCustomerDto } from "./dto/update-customer.dto";
 import { UpdateRoleDto } from "./dto/update-role.dto";
 import { AuthenticatedUser } from "../auth/interfaces/user.interface";
+import { CreateGuestCustomerDto } from "./dto/create-guest-customer.dto";
 export declare class CustomersController {
     private readonly customersService;
     constructor(customersService: CustomersService);
     create(createCustomerDto: CreateCustomerDto): Promise<{
+        customerId: string;
+        name: string;
+        email: string;
+        password: string | null;
+        username: string | null;
+        phone: string | null;
+        address: string | null;
+        city: string | null;
+        birthday: Date | null;
+        image: string | null;
+        location: string | null;
+        totalSpent: number;
+        role: import(".prisma/client").$Enums.UserRole;
+        id: number;
+        joinDate: Date;
+        createdAt: Date;
+        updatedAt: Date;
+    }>;
+    createGuest(createGuestCustomerDto: CreateGuestCustomerDto): Promise<{
         customerId: string;
         name: string;
         email: string;

@@ -38,8 +38,12 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("api", app, document);
 
-  // Enable CORS
-  app.enableCors();
+  // Enable CORS with permissive settings for easy frontend integration
+  app.enableCors({
+    origin: true, // Allow any origin
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true, // Allow cookies
+  });
 
   const port = process.env.PORT || 4005;
 

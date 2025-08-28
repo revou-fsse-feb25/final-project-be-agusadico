@@ -19,9 +19,6 @@ const create_product_dto_1 = require("./dto/create-product.dto");
 const update_product_dto_1 = require("./dto/update-product.dto");
 const swagger_1 = require("@nestjs/swagger");
 const product_entity_1 = require("./entities/product.entity");
-const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
-const roles_guard_1 = require("../auth/guards/roles.guard");
-const roles_decorator_1 = require("../auth/decorators/roles.decorator");
 const public_decorator_1 = require("../auth/decorators/public.decorator");
 let ProductsController = class ProductsController {
     constructor(productsService) {
@@ -102,10 +99,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "findBySlugPublic", null);
 __decorate([
-    (0, swagger_1.ApiBearerAuth)("JWT-auth"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, common_1.Post)(),
-    (0, roles_decorator_1.Roles)("ADMIN"),
     (0, swagger_1.ApiOperation)({ summary: "Create a new product" }),
     (0, swagger_1.ApiResponse)({
         status: 201,
@@ -118,8 +112,6 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "create", null);
 __decorate([
-    (0, swagger_1.ApiBearerAuth)("JWT-auth"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, common_1.Get)(),
     (0, public_decorator_1.Public)(),
     (0, swagger_1.ApiOperation)({ summary: "Get all products" }),
@@ -133,8 +125,6 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "findAll", null);
 __decorate([
-    (0, swagger_1.ApiBearerAuth)("JWT-auth"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, common_1.Get)(":id"),
     (0, public_decorator_1.Public)(),
     (0, swagger_1.ApiOperation)({ summary: "Get a product by id" }),
@@ -151,8 +141,6 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "findOne", null);
 __decorate([
-    (0, swagger_1.ApiBearerAuth)("JWT-auth"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, common_1.Get)("slug/:slug"),
     (0, swagger_1.ApiOperation)({ summary: "Get a product by slug" }),
     (0, swagger_1.ApiParam)({ name: "slug", description: "Product slug" }),
@@ -168,10 +156,8 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "findBySlug", null);
 __decorate([
-    (0, swagger_1.ApiBearerAuth)("JWT-auth"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, common_1.Patch)(":id"),
-    (0, roles_decorator_1.Roles)("ADMIN"),
+    (0, public_decorator_1.Public)(),
     (0, swagger_1.ApiOperation)({ summary: "Update a product" }),
     (0, swagger_1.ApiParam)({ name: "id", description: "Product ID" }),
     (0, swagger_1.ApiResponse)({
@@ -187,16 +173,13 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "update", null);
 __decorate([
-    (0, swagger_1.ApiBearerAuth)("JWT-auth"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, common_1.Delete)(":id"),
-    (0, roles_decorator_1.Roles)("ADMIN"),
+    (0, public_decorator_1.Public)(),
     (0, swagger_1.ApiOperation)({ summary: "Delete a product" }),
     (0, swagger_1.ApiParam)({ name: "id", description: "Product ID" }),
     (0, swagger_1.ApiResponse)({
         status: 200,
         description: "The product has been successfully deleted.",
-        type: product_entity_1.Product,
     }),
     (0, swagger_1.ApiResponse)({ status: 404, description: "Product not found." }),
     __param(0, (0, common_1.Param)("id", common_1.ParseIntPipe)),

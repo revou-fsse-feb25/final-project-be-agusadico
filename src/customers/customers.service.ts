@@ -4,6 +4,7 @@ import { CreateCustomerDto } from "./dto/create-customer.dto";
 import { UpdateCustomerDto } from "./dto/update-customer.dto";
 import { UpdateRoleDto } from "./dto/update-role.dto";
 import { AuthenticatedUser } from "../auth/interfaces/user.interface";
+import { CreateGuestCustomerDto } from "./dto/create-guest-customer.dto";
 
 @Injectable()
 export class CustomersService {
@@ -12,6 +13,23 @@ export class CustomersService {
   async create(createCustomerDto: CreateCustomerDto) {
     return this.prisma.customer.create({
       data: createCustomerDto,
+    });
+  }
+
+  async createGuest(createGuestCustomerDto: CreateGuestCustomerDto) {
+    // Generate a unique customer ID for guest
+    const timestamp = Date.now().toString();
+    const randomSuffix = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    const uniqueCustomerId = `GUEST-${timestamp}-${randomSuffix}`;
+    
+    // Create a guest customer with only the name
+    return this.prisma.customer.create({
+      data: {
+        customerId: uniqueCustomerId,
+        name: createGuestCustomerDto.name,
+        email: `guest_${timestamp}@example.com`, // Generate a placeholder email
+        role: 'USER' // Using USER role as GUEST is not defined in the enum
+      },
     });
   }
 

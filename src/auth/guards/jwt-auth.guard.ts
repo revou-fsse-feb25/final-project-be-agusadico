@@ -10,6 +10,11 @@ export class JwtAuthGuard extends AuthGuard("jwt") {
   }
 
   canActivate(context: ExecutionContext) {
+    // Development mode: Always allow access to all endpoints
+    return true;
+    
+    // Production code (commented out for development):
+    /*
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
@@ -20,5 +25,6 @@ export class JwtAuthGuard extends AuthGuard("jwt") {
     }
     
     return super.canActivate(context);
+    */
   }
 }

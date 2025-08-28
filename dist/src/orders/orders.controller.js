@@ -19,16 +19,13 @@ const create_order_dto_1 = require("./dto/create-order.dto");
 const update_order_dto_1 = require("./dto/update-order.dto");
 const swagger_1 = require("@nestjs/swagger");
 const order_entity_1 = require("./entities/order.entity");
-const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
-const roles_guard_1 = require("../auth/guards/roles.guard");
-const roles_decorator_1 = require("../auth/decorators/roles.decorator");
 const current_user_decorator_1 = require("../auth/decorators/current-user.decorator");
 let OrdersController = class OrdersController {
     constructor(ordersService) {
         this.ordersService = ordersService;
     }
     create(createOrderDto, user) {
-        return this.ordersService.create(createOrderDto, user.id);
+        return this.ordersService.create(createOrderDto, user ? user.id : 1);
     }
     findAll() {
         return this.ordersService.findAll();
@@ -40,7 +37,7 @@ let OrdersController = class OrdersController {
         return this.ordersService.findByOrderId(orderId, user);
     }
     findMyOrders(user) {
-        return this.ordersService.findMyOrders(user.id);
+        return this.ordersService.findMyOrders(user ? user.id : 1);
     }
     update(id, updateOrderDto, user) {
         return this.ordersService.update(id, updateOrderDto, user);
@@ -52,15 +49,12 @@ let OrdersController = class OrdersController {
 exports.OrdersController = OrdersController;
 __decorate([
     (0, common_1.Post)(),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, swagger_1.ApiBearerAuth)(),
     (0, swagger_1.ApiOperation)({ summary: "Create a new order" }),
     (0, swagger_1.ApiResponse)({
         status: 201,
         description: "The order has been successfully created.",
         type: order_entity_1.Order,
     }),
-    (0, swagger_1.ApiResponse)({ status: 401, description: "Unauthorized" }),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, current_user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
@@ -69,29 +63,21 @@ __decorate([
 ], OrdersController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
-    (0, roles_decorator_1.Roles)("ADMIN"),
-    (0, swagger_1.ApiBearerAuth)(),
-    (0, swagger_1.ApiOperation)({ summary: "Get all orders (Admin only)" }),
+    (0, swagger_1.ApiOperation)({ summary: "Get all orders" }),
     (0, swagger_1.ApiResponse)({
         status: 200,
         description: "Return all orders.",
         type: [order_entity_1.Order],
     }),
-    (0, swagger_1.ApiResponse)({ status: 401, description: "Unauthorized" }),
-    (0, swagger_1.ApiResponse)({ status: 403, description: "Forbidden - Admin role required" }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], OrdersController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(":id"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, swagger_1.ApiBearerAuth)(),
     (0, swagger_1.ApiOperation)({ summary: "Get an order by id" }),
     (0, swagger_1.ApiParam)({ name: "id", description: "Order ID" }),
     (0, swagger_1.ApiResponse)({ status: 200, description: "Return the order.", type: order_entity_1.Order }),
-    (0, swagger_1.ApiResponse)({ status: 401, description: "Unauthorized" }),
     (0, swagger_1.ApiResponse)({ status: 404, description: "Order not found." }),
     __param(0, (0, common_1.Param)("id", common_1.ParseIntPipe)),
     __param(1, (0, current_user_decorator_1.CurrentUser)()),
@@ -101,12 +87,9 @@ __decorate([
 ], OrdersController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Get)("order-id/:orderId"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, swagger_1.ApiBearerAuth)(),
     (0, swagger_1.ApiOperation)({ summary: "Get an order by orderId" }),
     (0, swagger_1.ApiParam)({ name: "orderId", description: "Order unique identifier" }),
     (0, swagger_1.ApiResponse)({ status: 200, description: "Return the order.", type: order_entity_1.Order }),
-    (0, swagger_1.ApiResponse)({ status: 401, description: "Unauthorized" }),
     (0, swagger_1.ApiResponse)({ status: 404, description: "Order not found." }),
     __param(0, (0, common_1.Param)("orderId")),
     __param(1, (0, current_user_decorator_1.CurrentUser)()),
@@ -116,15 +99,12 @@ __decorate([
 ], OrdersController.prototype, "findByOrderId", null);
 __decorate([
     (0, common_1.Get)("my-orders"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, swagger_1.ApiBearerAuth)(),
     (0, swagger_1.ApiOperation)({ summary: "Get current user's orders" }),
     (0, swagger_1.ApiResponse)({
         status: 200,
         description: "Return user's orders.",
         type: [order_entity_1.Order],
     }),
-    (0, swagger_1.ApiResponse)({ status: 401, description: "Unauthorized" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -132,8 +112,6 @@ __decorate([
 ], OrdersController.prototype, "findMyOrders", null);
 __decorate([
     (0, common_1.Patch)(":id"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, swagger_1.ApiBearerAuth)(),
     (0, swagger_1.ApiOperation)({ summary: "Update an order" }),
     (0, swagger_1.ApiParam)({ name: "id", description: "Order ID" }),
     (0, swagger_1.ApiResponse)({
@@ -141,7 +119,6 @@ __decorate([
         description: "The order has been successfully updated.",
         type: order_entity_1.Order,
     }),
-    (0, swagger_1.ApiResponse)({ status: 401, description: "Unauthorized" }),
     (0, swagger_1.ApiResponse)({ status: 404, description: "Order not found." }),
     __param(0, (0, common_1.Param)("id", common_1.ParseIntPipe)),
     __param(1, (0, common_1.Body)()),
@@ -152,15 +129,12 @@ __decorate([
 ], OrdersController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(":id"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, swagger_1.ApiBearerAuth)(),
     (0, swagger_1.ApiOperation)({ summary: "Delete an order" }),
     (0, swagger_1.ApiParam)({ name: "id", description: "Order ID" }),
     (0, swagger_1.ApiResponse)({
         status: 200,
         description: "The order has been successfully deleted.",
     }),
-    (0, swagger_1.ApiResponse)({ status: 401, description: "Unauthorized" }),
     (0, swagger_1.ApiResponse)({ status: 404, description: "Order not found." }),
     __param(0, (0, common_1.Param)("id", common_1.ParseIntPipe)),
     __param(1, (0, current_user_decorator_1.CurrentUser)()),

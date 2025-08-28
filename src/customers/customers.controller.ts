@@ -7,19 +7,17 @@ import {
   Param,
   Delete,
   ParseIntPipe,
-  UseGuards,
 } from "@nestjs/common";
 import { CustomersService } from "./customers.service";
 import { CreateCustomerDto } from "./dto/create-customer.dto";
 import { UpdateCustomerDto } from "./dto/update-customer.dto";
 import { UpdateRoleDto } from "./dto/update-role.dto";
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth } from "@nestjs/swagger";
+import { ApiTags, ApiOperation, ApiResponse, ApiParam } from "@nestjs/swagger";
 import { Customer } from "./entities/customer.entity";
-import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
-import { RolesGuard } from "../auth/guards/roles.guard";
-import { Roles } from "../auth/decorators/roles.decorator";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
 import { AuthenticatedUser } from "../auth/interfaces/user.interface";
+import { Public } from "../auth/decorators/public.decorator";
+import { CreateGuestCustomerDto } from "./dto/create-guest-customer.dto";
 
 @ApiTags("customers")
 @Controller("customers")
@@ -35,6 +33,18 @@ export class CustomersController {
   })
   create(@Body() createCustomerDto: CreateCustomerDto) {
     return this.customersService.create(createCustomerDto);
+  }
+  
+  @Public()
+  @Post('guest')
+  @ApiOperation({ summary: "Create a guest customer with only name" })
+  @ApiResponse({
+    status: 201,
+    description: "The guest customer has been successfully created.",
+    type: Customer,
+  })
+  createGuest(@Body() createGuestCustomerDto: CreateGuestCustomerDto) {
+    return this.customersService.createGuest(createGuestCustomerDto);
   }
 
   @Get()
@@ -75,8 +85,6 @@ export class CustomersController {
   }
 
   @Patch(":id")
-  @UseGuards(JwtAuthGuard) // Temporarily remove RolesGuard and @Roles for testing
-  @ApiBearerAuth("JWT-auth")
   @ApiOperation({ summary: "Update a customer" })
   @ApiParam({ name: "id", description: "Customer ID" })
   @ApiResponse({
@@ -85,19 +93,6 @@ export class CustomersController {
     type: Customer,
   })
   @ApiResponse({ status: 404, description: "Customer not found." })
-  @Patch(":id")
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles("ADMIN")
-  @ApiBearerAuth("JWT-auth")
-  @ApiOperation({ summary: "Update a customer (Admin only)" })
-  @ApiParam({ name: "id", description: "Customer ID" })
-  @ApiResponse({
-    status: 200,
-    description: "The customer has been successfully updated.",
-    type: Customer,
-  })
-  @ApiResponse({ status: 404, description: "Customer not found." })
-  @ApiResponse({ status: 403, description: "Forbidden - Admin access required." })
   update(
     @Param("id", ParseIntPipe) id: number,
     @Body() updateCustomerDto: UpdateCustomerDto,
@@ -107,10 +102,7 @@ export class CustomersController {
   }
 
   @Patch(":id/role")
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles("ADMIN")
-  @ApiBearerAuth("JWT-auth")
-  @ApiOperation({ summary: "Update customer role (Admin only)" })
+  @ApiOperation({ summary: "Update customer role" })
   @ApiParam({ name: "id", description: "Customer ID" })
   @ApiResponse({
     status: 200,
@@ -118,7 +110,6 @@ export class CustomersController {
     type: Customer,
   })
   @ApiResponse({ status: 404, description: "Customer not found." })
-  @ApiResponse({ status: 403, description: "Forbidden - Admin access required." })
   updateRole(
     @Param("id", ParseIntPipe) id: number,
     @Body() updateRoleDto: UpdateRoleDto,

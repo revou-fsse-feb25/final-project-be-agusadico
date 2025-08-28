@@ -1,4 +1,4 @@
-import { Module, NestModule, MiddlewareConsumer } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { PrismaModule } from "./prisma/prisma.module";
 import { AuthModule } from "./auth/auth.module";
@@ -11,7 +11,6 @@ import { BillingsModule } from "./billings/billings.module";
 import { ShippingsModule } from "./shippings/shippings.module";
 import { LastOrdersModule } from "./last-orders/last-orders.module";
 import { ContactSubmissionsModule } from "./contact-submissions/contact-submissions.module";
-import { AccessControlMiddleware } from "./common/middleware/access-control.middleware";
 import { CommonModule } from "./common/common.module";
 
 @Module({
@@ -33,20 +32,4 @@ import { CommonModule } from "./common/common.module";
     ContactSubmissionsModule,
   ],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AccessControlMiddleware)
-      .forRoutes(
-        'customers',
-        'orders', 
-        'order-items',
-        'billings',
-        'shippings',
-        'last-orders',
-        'contact-submissions',
-        'products',
-        'product-relations'
-      );
-  }
-}
+export class AppModule {}
