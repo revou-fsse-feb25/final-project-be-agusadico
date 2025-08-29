@@ -19,7 +19,7 @@ async function main() {
             price: 12.99,
             originalPrice: 14.99,
             discount: '15%',
-            image: 'https://example.com/images/Legendary-Chicken-Ramen.jpg',
+            image: 'https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3ob9yZTr1GrN0i9hgzAHWQjZ4Cd3PpeBlVSfUD',
             description: 'Rich, flavorful chicken broth paired with premium ramen noodles, juicy grilled chicken, and perfectly cooked egg. Every bowl promises an authentic, legendary ramen experience.',
             features: [
                 "Slow-cooked chicken broth for deep flavor",
@@ -33,8 +33,9 @@ async function main() {
             slug: 'legendary-chicken-ramen',
             categories: ['Ramen', 'Popular', 'Chicken'],
             galleryImages: [
-                'https://example.com/images/legendary-chicken-ramen-1.jpg',
-                'https://example.com/images/legendary-chicken-ramen-2.jpg',
+                'https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3ovkkAvr076Tz4X2KVUD1Ql3YGZyInOSmJuqwa',
+                'https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3oVRp6sdCW6jO9JZ4HhPRoqTnv0xuzGpsadfg7',
+                'https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3onsHvgzq3uYq2ekOzv6T0SPdQ3wtbM9yVEgWU',
             ],
             tags: ['ramen', 'chicken', 'popular'],
         },
@@ -44,7 +45,7 @@ async function main() {
             name: 'Karaage Dry Ramen',
             category: 'Dry Ramen',
             price: 10.99,
-            image: 'https://example.com/images/karaage-dry-ramen.jpg',
+            image: 'https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3oeEN2LEGBrLY6W34ExyI2pbUQDJlHu1vzMnK8',
             description: 'Irresistibly crispy Japanese fried chicken atop dry ramen, tossed with a savory, aromatic sauce and fresh garnishes for a bold, modern flavor twist.',
             features: [
                 "Crispy fried chicken for a satisfying crunch",
@@ -59,8 +60,9 @@ async function main() {
             slug: 'karaage-dry-ramen',
             categories: ['Dry Ramen', 'Chicken'],
             galleryImages: [
-                'https://example.com/images/karaage-dry-ramen-1.jpg',
-                'https://example.com/images/karaage-dry-ramen-2.jpg',
+                'https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3o5miofEYTgau2RKeZo6P0v7SOmtcLC415Yb8H',
+                'https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3oTJJGZYpDfzYUogclnKdJEASm5jVrt8XeCxsI',
+                'https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3oFozCmFxxGkAn1ZSv8Pmgb0lR3yKMBdzUea2t',
             ],
             tags: ['karaage', 'dry ramen', 'chicken'],
         },
@@ -100,19 +102,19 @@ async function main() {
             items: {
                 create: [
                     {
-                        name: 'Beef Burger',
-                        image: 'https://example.com/images/beef-burger.jpg',
+                        name: 'Legendary Chicken Ramen',
+                        image: 'https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3ob9yZTr1GrN0i9hgzAHWQjZ4Cd3PpeBlVSfUD',
                         quantity: 1,
                         price: 12.99,
-                        category: 'Burger',
+                        category: 'Ramen',
                         productId: product1.id,
                     },
                     {
-                        name: 'Chicken Pasta',
-                        image: 'https://example.com/images/chicken-pasta.jpg',
+                        name: 'Karaage Dry Ramen',
+                        image: 'https://r9bjibnci2.ufs.sh/f/Bg4UzKvxRd3oeEN2LEGBrLY6W34ExyI2pbUQDJlHu1vzMnK8',
                         quantity: 1,
                         price: 10.99,
-                        category: 'Pasta',
+                        category: 'Dry Ramen',
                         productId: product2.id,
                     },
                 ],
