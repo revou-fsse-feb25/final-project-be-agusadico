@@ -4,6 +4,13 @@
 
 This is a comprehensive NestJS backend application for restaurant management, featuring a complete e-commerce system with customer management, product catalog, order processing, and more. The application uses Prisma ORM with PostgreSQL and implements JWT authentication with role-based access control.
 
+## Live Demo
+
+Check out the live demo of the application:
+
+- **Frontend**: [Ramen President](https://final-project-fe-agusadico-git-main-agus-purwadis-projects.vercel.app/)
+- **Backend API**: [Restaurant Management Backend API Doc](https://final-project-be-agusadico-production.up.railway.app/api)
+
 ## Features
 
 - **Authentication & Authorization**
